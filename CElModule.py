@@ -14,6 +14,7 @@ import pickle
 import os
 import pprint
 from tkinter import *
+from CModDraw import CModDraw
 
 class CElModule():
     """ Класс электронного модуля"""
@@ -216,104 +217,36 @@ class CElModule():
         retSMT=sp.rep_SMD_nozzle()
         print(retSMT[0])   
         #----------------------
-        #       
-        root = Tk()
-        root.title(self.__ModName)
-        print(self.__SizeBrd.size(5))
-        scl=25.
-        #scl=10.
-        root.geometry(self.__SizeBrd.size(1.2*scl))
-        #
-        canvas = Canvas(bg="#53C351", width=round(self.__SizeBrd.x*scl), height=round(self.__SizeBrd.y*scl))
-        canvas.pack(anchor=CENTER, expand=1)
-
-        c=tCXY(scl,self.__SizeBrd,'B',0)
+        # Объект графического отображения       
+        CMDraw=CModDraw(self.__ModName,25,self.__SizeBrd,'B',0)
         #----------------------
-        #
+        # Вывод элементов по дезигнаторам
         for key in retSMT[1].keys():
             print(f'>>{key}')
             for el in retSMT[1][key]:
                 print('   ',el)
-                rzm=CXY(el.mt.x,el.mt.y)/2.
                 for dz in self.__PerEl[el.UID]:
                     print('                       ',dz)
-                    vl=c.tr(dz.XY.vl(rzm,dz.Angle))
-                    np=c.tr(dz.XY.np(rzm,dz.Angle))
-                    el_fill="#80CBC4"
-                    el_outline="#004D40"
-
-                    match dz.Des[0]:
-                        case 'R':
-                            el_fill="#485E5D"
-                            el_outline="#13453E"
-                        case 'C':
-                            el_fill="#757535"
-                            el_outline="#1B6872"
-                        case 'L':
-                            el_fill="#247CF7"
-                            el_outline="#0A373D"
-                        case 'D':
-                            el_fill="#214643"
-                            el_outline="#13636E"
-                        case 'V':
-                            match dz.Des[1]:
-                                case 'T':
-                                    el_fill="#373798"
-                                    el_outline="#396336"
-                                    #print(rzm,dz.Angle)
-                                case 'D':
-                                    el_fill="#6E2E1E"
-                                    el_outline="#3A7981"
- 
-
-                    canvas.create_rectangle(vl.x,vl.y,np.x,np.y, fill=el_fill, outline=el_outline)
-                    rz1p=CXY(.2,.2)
-                    vl1p=c.tr(dz.XY1p.vl(rz1p))
-                    np1p=c.tr(dz.XY1p.np(rz1p))
-                    canvas.create_rectangle(vl1p.x,vl1p.y,np1p.x,np1p.y, fill="#F17F7F", outline="#02231D")
-                    
-                    dt=c.tr(dz.XY)
-                    textID = canvas.create_text(dt.x,dt.y, angle=dz.Angle, fill="#FDFDFD")
-                    canvas.itemconfig(textID, text = dz.Des)
-                    
-        #
+                    CMDraw.DzDraw(dz,CXY(el.mt.x,el.mt.y)/2.)
+        #--------------
+        # Поиск, вывод и сортировка реперных знаков
         spREP=sp.rep_Rep()
         #print (len(spREP))
         for rep in spREP:
             print(rep)
             lst_rep=self.__PerEl[rep.UID]
-           
-            
             for dz_rep in  lst_rep:
                 print(dz_rep)
-                rdz=CXY(.5,.5)
-                vl_rdz=c.tr(dz_rep.XY.vl(rdz))
-                np_rdz=c.tr(dz_rep.XY.np(rdz))
-                rdz1=CXY(1,1)
-                vl_rdz1=c.tr(dz_rep.XY.vl(rdz1))
-                np_rdz1=c.tr(dz_rep.XY.np(rdz1))
-                canvas.create_oval(vl_rdz1.x,vl_rdz1.y,np_rdz1.x,np_rdz1.y, fill="#69CFB0", outline="#031210")
-                canvas.create_oval(vl_rdz.x,vl_rdz.y,np_rdz.x,np_rdz.y, fill="#C0E16E", outline="#031210")
-                dtr=c.tr(dz_rep.XY)
-                textIDR = canvas.create_text(dtr.x,dtr.y, angle=dz_rep.Angle, fill="#0B0606")
-                canvas.itemconfig(textIDR, text = dz_rep.Des[3])
+                CMDraw.RepDraw(dz_rep,CXY(.5,.5))
 
             lst_fr=[dzr for dzr in lst_rep]
             lst_fr.sort(key=lambda d : CXY(round(self.__SizeBrd.x-d.XY.x),d.XY.y).lvector())
             print('')
             for dd in lst_fr:
                 print (dd)
-            rzfr=CXY(1.1,1.1)
-            rep0=lst_fr[0].XY
-            vl_rep0=c.tr(rep0.vl(rzfr))
-            np_rep0=c.tr(rep0.np(rzfr))
-            canvas.create_oval(vl_rep0.x,vl_rep0.y,np_rep0.x,np_rep0.y,  outline="#E1FC37")
-            rep1=lst_fr[-1].XY
-            vl_rep1=c.tr(rep1.vl(rzfr))
-            np_rep1=c.tr(rep1.np(rzfr))
-            canvas.create_oval(vl_rep1.x,vl_rep1.y,np_rep1.x,np_rep1.y,  outline="#291FE7")       
+            CMDraw.RepFL(CXY(1.1,1.1),lst_fr[0].XY,rep1=lst_fr[-1].XY)     
         #--------------
-        root.mainloop()
+        CMDraw.RootLoop()
         #
         return
 
