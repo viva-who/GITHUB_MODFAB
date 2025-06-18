@@ -9,6 +9,10 @@ class CDesignator():
         self.__XY1p=iXY1p
     
     @property
+    def Layer(self):
+        return self.__Layer
+    
+    @property
     def XY1p(self):
         return self.__XY1p
     

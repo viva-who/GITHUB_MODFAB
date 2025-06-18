@@ -25,8 +25,13 @@ class CXY():
     return xy
   
 
-  def lvector(self):
-     return math.sqrt(self.__x**2+self.__y**2)
+  def lvector(self,side,size_xy):
+     x=0.
+     if side=='F':
+        x=self.__x
+     else:
+        x=size_xy.x-self.__x   
+     return math.sqrt(x**2+self.__y**2)
 
 
   def __init__(self,x=0.,y=0.):

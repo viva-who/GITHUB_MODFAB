@@ -208,7 +208,7 @@ class CElModule():
 
 
     # Отчет по монтажу SMD компонент
-    def RepSMDprm(self,nIsp):
+    def RepSMDprm(self,nIsp,side):
         sp=self.GetIsp(nIsp)
         #----------------------
         for el in sp:
@@ -218,7 +218,7 @@ class CElModule():
         print(retSMT[0])   
         #----------------------
         # Объект графического отображения       
-        CMDraw=CModDraw(self.__ModName,25,self.__SizeBrd,'B',0)
+        CMDraw=CModDraw(self.__ModName,15,self.__SizeBrd,side,0)
         #----------------------
         # Вывод элементов по дезигнаторам
         for key in retSMT[1].keys():
@@ -226,25 +226,24 @@ class CElModule():
             for el in retSMT[1][key]:
                 print('   ',el)
                 for dz in self.__PerEl[el.UID]:
-                    print('                       ',dz)
-                    CMDraw.DzDraw(dz,CXY(el.mt.x,el.mt.y)/2.)
+                    if dz.Layer==side :
+                        print('                       ',dz)
+                        CMDraw.DzDraw(dz,CXY(el.mt.x,el.mt.y)/2.)
         #--------------
         # Поиск, вывод и сортировка реперных знаков
         spREP=sp.rep_Rep()
         #print (len(spREP))
         for rep in spREP:
-            print(rep)
-            lst_rep=self.__PerEl[rep.UID]
+            print(rep)#,'   ',rep.mt.fp[:5])
+            lst_rep=[dz for dz in self.__PerEl[rep.UID] if (dz.Layer==side) | (rep.mt.fp[:5]=='REP-D')]
             for dz_rep in  lst_rep:
                 print(dz_rep)
                 CMDraw.RepDraw(dz_rep,CXY(.5,.5))
-
-            lst_fr=[dzr for dzr in lst_rep]
-            lst_fr.sort(key=lambda d : CXY(round(self.__SizeBrd.x-d.XY.x),d.XY.y).lvector())
+            lst_rep.sort(key=lambda d : d.XY.lvector(side,self.__SizeBrd))
             print('')
-            for dd in lst_fr:
+            for dd in lst_rep:
                 print (dd)
-            CMDraw.RepFL(CXY(1.1,1.1),lst_fr[0].XY,rep1=lst_fr[-1].XY)     
+            CMDraw.RepFL(CXY(1.1,1.1),lst_rep[0].XY,rep1=lst_rep[-1].XY)     
         #--------------
         CMDraw.RootLoop()
         #
@@ -266,7 +265,8 @@ def main():
     #nfile='B3n2-TU_IBOM_r1.html'
     #nfile='C:/Users/tyurine.TEAMR2/Desktop/Python/GItHubUtilMain/launch/B3n2-TPb_IBOM_r1.html'
     #nfile='B3n2-MeasUDiv_IBOM_r1.html'
-    nmodule='B3n2-DC-DC_r1'#.html'
+    #nmodule='B3n2-DC-DC_r1'#.html'
+    nmodule='B3n2-ManBot_r1'#.html'
     #nmodule='B3n2-MeasUDiv_r1'#.html'
     #nfile='TestIBOM_TSU33702.html'
     #nfile='TestIBOM_TSU33701.html'
@@ -277,7 +277,8 @@ def main():
     #spec=CElModule.Pick(nmodule,LAUNCHDIR)
     spec=CElModule(nmodule,LAUNCHDIR)
     #spec.RepDz()
-    spec.RepSMDprm(0)
+    spec.RepSMDprm(0,'F')
+    spec.RepSMDprm(0,'B')
     #print(spec.report())
     #print(spec.StdRepIsp(3))
     #print(spec.StdRepIsp(1))

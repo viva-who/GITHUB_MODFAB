@@ -7,6 +7,9 @@ class MntType(abc.ABC):
   # Конструктор
   def __init__(self,futprn):
     self.__fp=futprn
+  @property
+  def fp(self):
+      return self.__fp
   # Обязатльный к перегрузке класс  
   @abc.abstractmethod 
   def mnt_type (self): pass  
