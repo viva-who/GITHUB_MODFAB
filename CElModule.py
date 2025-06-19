@@ -239,12 +239,12 @@ class CElModule():
             lst_rep=[dz for dz in self.__PerEl[rep.UID] if (dz.Layer==side) | (rep.mt.fp[:5]=='REP-D')]
             for dz_rep in  lst_rep:
                 print(dz_rep)
-                CMDraw.RepDraw(dz_rep,CXY(.5,.5))
+                CMDraw.RepDraw(dz_rep,1.)
             lst_rep.sort(key=lambda d : d.XY.lvector(side,self.__SizeBrd))
             print('')
             for dd in lst_rep:
                 print (dd)
-            CMDraw.RepFL(CXY(1.1,1.1),lst_rep[0].XY,rep1=lst_rep[-1].XY)     
+            CMDraw.RepFL(CXY(1.1,1.1),lst_rep[0],lst_rep[-1])     
         #--------------
         CMDraw.RootLoop()
         #

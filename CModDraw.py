@@ -1,7 +1,7 @@
 from CCoordinates import CXY,tCXY
 from CDesignator import CDesignator
 from tkinter import *
-
+# Класс отрисовки электронного модуля
 class CModDraw():
     def __init__(self,ModName,scale,SizeBoard,side,angle=0):
         self.__side=side
@@ -19,23 +19,24 @@ class CModDraw():
         #
         self.__c=tCXY(self.__scl,self.__SB,self.__side,self.__angle)
 
-
-    def DrawFig(self,rzm,xy,Angle,el_fill,el_outline):
+    # Отрисовка фигуры с переводом координат
+    def DrawFig(self,rzm,xy,Angle,el_fill,el_outline,fig='R'):
          # Рисуем компонент
         vl=self.__c.tr(xy.vl(rzm,Angle))
         np=self.__c.tr(xy.np(rzm,Angle))
-        self.__canvas.create_rectangle(vl.x,vl.y,np.x,np.y, fill=el_fill, outline=el_outline)
-        
-
+        match fig:
+            case 'R':
+                self.__canvas.create_rectangle(vl.x,vl.y,np.x,np.y, fill=el_fill, outline=el_outline)
+            case 'O':
+                self.__canvas.create_oval(vl.x,vl.y,np.x,np.y, fill=el_fill, outline=el_outline)
+            
+    # Печать текста на плате с переводом координат
     def DrawText(self,xy,ang,txt,txt_fill):
         dt=self.__c.tr(xy)
         textID = self.__canvas.create_text(dt.x,dt.y, angle=ang, fill=txt_fill)
         self.__canvas.itemconfig(textID, text = txt)
 
-
-
-
-
+    # Отрисовка электронного копонента
     def DzDraw(self,dz,rzm):
         el_fill="#80CBC4"
         el_outline="#004D40"
@@ -68,32 +69,22 @@ class CModDraw():
         # Печатаем дезигнатор   
         self.DrawText(dz.XY,dz.Angle,dz.Des,"#FDFDFD")         
         
-
+    # Отрисовка репперного занака
     def RepDraw(self,dz_rep,rdz):
         # Рисуем внешний круг
-        rdz1=CXY(1.,1.)
-        vl_rdz1=self.__c.tr(dz_rep.XY.vl(rdz1))
-        np_rdz1=self.__c.tr(dz_rep.XY.np(rdz1))
-        self.__canvas.create_oval(vl_rdz1.x,vl_rdz1.y,np_rdz1.x,np_rdz1.y, fill="#69CFB0", outline="#031210")
+        self.DrawFig(CXY(rdz,rdz),dz_rep.XY,dz_rep.Angle,"#69CFB0","#031210",'O')
         # Рисуем внутренний круг
-        vl_rdz=self.__c.tr(dz_rep.XY.vl(rdz))
-        np_rdz=self.__c.tr(dz_rep.XY.np(rdz))
-        self.__canvas.create_oval(vl_rdz.x,vl_rdz.y,np_rdz.x,np_rdz.y, fill="#C0E16E", outline="#031210")
+        self.DrawFig(CXY(.5,.5),dz_rep.XY,dz_rep.Angle,"#C0E16E","#031210",'O')
         # Подписываем дезигнатор
-        dtr=self.__c.tr(dz_rep.XY)
-        textIDR = self.__canvas.create_text(dtr.x,dtr.y, angle=dz_rep.Angle, fill="#0B0606")
-        self.__canvas.itemconfig(textIDR, text = dz_rep.Des[3])
-
-
+        self.DrawText(dz_rep.XY,dz_rep.Angle,dz_rep.Des[3],"#0B0606")         
+        
+    # Отрисовка меток 2-х рабочих репперов ближнего и дальнего
     def RepFL(self,rzfr,rep0,rep1): 
         # Выводим репер с нулевыми координатами  
-        vl_rep0=self.__c.tr(rep0.vl(rzfr))
-        np_rep0=self.__c.tr(rep0.np(rzfr))
-        self.__canvas.create_oval(vl_rep0.x,vl_rep0.y,np_rep0.x,np_rep0.y,  outline="#E1FC37")
+        self.DrawFig(rzfr,rep0.XY,rep0.Angle,"","#E1FC37",'O')
         # Выводим самый дальний репер
-        vl_rep1=self.__c.tr(rep1.vl(rzfr))
-        np_rep1=self.__c.tr(rep1.np(rzfr))
-        self.__canvas.create_oval(vl_rep1.x,vl_rep1.y,np_rep1.x,np_rep1.y,  outline="#291FE7")      
+        self.DrawFig(rzfr,rep1.XY,rep1.Angle,"","#291FE7",'O')
+         
 
     def RootLoop(self):
         self.__root.mainloop()
