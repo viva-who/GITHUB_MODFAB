@@ -19,6 +19,23 @@ class CModDraw():
         #
         self.__c=tCXY(self.__scl,self.__SB,self.__side,self.__angle)
 
+
+    def DrawFig(self,rzm,xy,Angle,el_fill,el_outline):
+         # Рисуем компонент
+        vl=self.__c.tr(xy.vl(rzm,Angle))
+        np=self.__c.tr(xy.np(rzm,Angle))
+        self.__canvas.create_rectangle(vl.x,vl.y,np.x,np.y, fill=el_fill, outline=el_outline)
+        
+
+    def DrawText(self,xy,ang,txt,txt_fill):
+        dt=self.__c.tr(xy)
+        textID = self.__canvas.create_text(dt.x,dt.y, angle=ang, fill=txt_fill)
+        self.__canvas.itemconfig(textID, text = txt)
+
+
+
+
+
     def DzDraw(self,dz,rzm):
         el_fill="#80CBC4"
         el_outline="#004D40"
@@ -45,19 +62,12 @@ class CModDraw():
                         el_fill="#6E2E1E"
                         el_outline="#3A7981"
         # Рисуем компонент
-        vl=self.__c.tr(dz.XY.vl(rzm,dz.Angle))
-        np=self.__c.tr(dz.XY.np(rzm,dz.Angle))
-        self.__canvas.create_rectangle(vl.x,vl.y,np.x,np.y, fill=el_fill, outline=el_outline)
+        self.DrawFig(rzm,dz.XY,dz.Angle,el_fill,el_outline)
         # Рисуем ключ
-        rz1p=CXY(.2,.2)
-        vl1p=self.__c.tr(dz.XY1p.vl(rz1p))
-        np1p=self.__c.tr(dz.XY1p.np(rz1p))
-        self.__canvas.create_rectangle(vl1p.x,vl1p.y,np1p.x,np1p.y, fill="#F17F7F", outline="#02231D")
-        # Печатаем дезигнатор            
-        dt=self.__c.tr(dz.XY)
-        textID = self.__canvas.create_text(dt.x,dt.y, angle=dz.Angle, fill="#FDFDFD")
-        self.__canvas.itemconfig(textID, text = dz.Des)
-
+        self.DrawFig(CXY(.2,.2),dz.XY1p,dz.Angle,"#F17F7F","#02231D")
+        # Печатаем дезигнатор   
+        self.DrawText(dz.XY,dz.Angle,dz.Des,"#FDFDFD")         
+        
 
     def RepDraw(self,dz_rep,rdz):
         # Рисуем внешний круг

@@ -206,9 +206,10 @@ class CElModule():
                 print(d)
         return
 
-
+    
     # Отчет по монтажу SMD компонент
     def RepSMDprm(self,nIsp,side):
+        SCALE=20
         sp=self.GetIsp(nIsp)
         #----------------------
         for el in sp:
@@ -218,7 +219,7 @@ class CElModule():
         print(retSMT[0])   
         #----------------------
         # Объект графического отображения       
-        CMDraw=CModDraw(self.__ModName,15,self.__SizeBrd,side,0)
+        CMDraw=CModDraw(self.__ModName,SCALE,self.__SizeBrd,side,0)
         #----------------------
         # Вывод элементов по дезигнаторам
         for key in retSMT[1].keys():
@@ -265,9 +266,11 @@ def main():
     #nfile='B3n2-TU_IBOM_r1.html'
     #nfile='C:/Users/tyurine.TEAMR2/Desktop/Python/GItHubUtilMain/launch/B3n2-TPb_IBOM_r1.html'
     #nfile='B3n2-MeasUDiv_IBOM_r1.html'
-    #nmodule='B3n2-DC-DC_r1'#.html'
-    nmodule='B3n2-ManBot_r1'#.html'
+
+    nmodule='B3n2-DC-DC_r1'#.html'
+    #nmodule='B3n2-ManBot_r1'#.html'
     #nmodule='B3n2-MeasUDiv_r1'#.html'
+
     #nfile='TestIBOM_TSU33702.html'
     #nfile='TestIBOM_TSU33701.html'
     #nfile='B3n2-IntMain_IBOM_r1.html'
