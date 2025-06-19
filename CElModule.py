@@ -18,6 +18,7 @@ from CModDraw import CModDraw
 
 class CElModule():
     """ Класс электронного модуля"""
+
     def __str__(self):
         return self.__NFBOM
     

@@ -6,7 +6,7 @@ import re
 import json
 from CElModule import CElModule
 from CSpecification import CSpecification
-
+import pprint
 
 LISPN=40
 
@@ -30,6 +30,12 @@ class CLaunch:
                         m_isp['spec']=sp
                         self.__launch_spec=self.__launch_spec+sp
                 print(' ')
+
+
+    @property
+    def mod_bom(self):
+        return self.__mod_bom
+
 
     def spmod_ai(self,mod):
         spm=CSpecification()
@@ -88,10 +94,16 @@ def main():
     #cz=CLaunch('zapusk_03.zap') 
     #cz=CLaunch('zapusk_01.zap')
     #print('\n')
-    print(cz.rpt())
-    print(cz.rpt_allMS())
-    print(cz.rpt_SMD_pack())
-    print(cz.rpt_stanoks())
+
+
+    #print(cz.rpt())
+    #print(cz.rpt_allMS())
+    #print(cz.rpt_SMD_pack())
+    #print(cz.rpt_stanoks())
+    pprint.pprint(cz.mod_bom)
+
+
+
     #print(cz.rpt_SMDRLC_pack8(1))
     #print(cz.rpt_SMDRLC_pack8(2))
     #print(cz.rpt_SMDRLC_pack8(3))
