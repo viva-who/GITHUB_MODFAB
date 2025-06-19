@@ -35,7 +35,22 @@ class CLaunch:
     @property
     def mod_bom(self):
         return self.__mod_bom
+    
+    
+    @property
+    def launch_fn(self):
+        return self.__launch_fn
+    
 
+    @property
+    def launch_dir(self):
+        return self.__launch_dir
+    
+    
+    @property
+    def launch_spec(self):
+        return self.__launch_spec
+    
 
     def spmod_ai(self,mod):
         spm=CSpecification()
@@ -100,10 +115,11 @@ def main():
     #print(cz.rpt_allMS())
     #print(cz.rpt_SMD_pack())
     #print(cz.rpt_stanoks())
+    pprint.pprint(cz.launch_spec)
     pprint.pprint(cz.mod_bom)
-
-
-
+    pprint.pprint(cz.launch_dir)
+    pprint.pprint(cz.launch_fn)
+    
     #print(cz.rpt_SMDRLC_pack8(1))
     #print(cz.rpt_SMDRLC_pack8(2))
     #print(cz.rpt_SMDRLC_pack8(3))
