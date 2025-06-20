@@ -209,7 +209,7 @@ class CElModule():
 
     
     # Отчет по монтажу SMD компонент
-    def RepSMDprm(self,nIsp,side):
+    def RepSMDprm(self,nIsp,side,angle=0):
         SCALE=20
         sp=self.GetIsp(nIsp)
         #----------------------
@@ -219,8 +219,9 @@ class CElModule():
         retSMT=sp.rep_SMD_nozzle()
         print(retSMT[0])   
         #----------------------
+        c=tCXY(SCALE,self.__SizeBrd,side,angle)
         # Объект графического отображения       
-        CMDraw=CModDraw(self.__ModName,SCALE,self.__SizeBrd,side,0)
+        CMDraw=CModDraw(self.__ModName,c)
         #----------------------
         # Вывод элементов по дезигнаторам
         for key in retSMT[1].keys():
@@ -241,11 +242,12 @@ class CElModule():
             for dz_rep in  lst_rep:
                 print(dz_rep)
                 CMDraw.RepDraw(dz_rep,1.)
-            lst_rep.sort(key=lambda d : d.XY.lvector(side,self.__SizeBrd))
+            lst_rep.sort(key=lambda d : d.XY.lvector(side,CXY(0.,0.),self.__SizeBrd))
             print('')
             for dd in lst_rep:
                 print (dd)
-            CMDraw.RepFL(CXY(1.1,1.1),lst_rep[0],lst_rep[-1])     
+            CMDraw.RepFL(CXY(1.1,1.1),lst_rep[0],lst_rep[-1])  
+            print(self.__SizeBrd)   
         #--------------
         CMDraw.RootLoop()
         #
@@ -268,9 +270,9 @@ def main():
     #nfile='C:/Users/tyurine.TEAMR2/Desktop/Python/GItHubUtilMain/launch/B3n2-TPb_IBOM_r1.html'
     #nfile='B3n2-MeasUDiv_IBOM_r1.html'
 
-    nmodule='B3n2-DC-DC_r1'#.html'
+    #nmodule='B3n2-DC-DC_r1'#.html'
     #nmodule='B3n2-ManBot_r1'#.html'
-    #nmodule='B3n2-MeasUDiv_r1'#.html'
+    nmodule='B3n2-MeasUDiv_r1'#.html'
 
     #nfile='TestIBOM_TSU33702.html'
     #nfile='TestIBOM_TSU33701.html'
@@ -282,6 +284,7 @@ def main():
     spec=CElModule(nmodule,LAUNCHDIR)
     #spec.RepDz()
     spec.RepSMDprm(0,'F')
+    spec.RepSMDprm(0,'F',90)
     spec.RepSMDprm(0,'B')
     #print(spec.report())
     #print(spec.StdRepIsp(3))

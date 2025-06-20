@@ -3,48 +3,44 @@ import math
 class CXY():
 
   def vl(self,half,angle=0):
-    #print (angle)
     xy=None
     if((angle==90) | (angle==270)):
-        #xy=CXY(self.x-half.x,self.y+half.y)
         xy=CXY(self.x-half.y,self.y+half.x)
     else:
-        #xy=CXY(self.x-half.y,self.y+half.x)
         xy=CXY(self.x-half.x,self.y+half.y)
     return xy
   
   def np(self,half,angle=0):
-    #print (angle)
     xy=None
     if((angle==90) | (angle==270)):
-        #xy=CXY(self.x+half.x,self.y-half.y)
         xy=CXY(self.x+half.y,self.y-half.x)
     else:
-        #xy=CXY(self.x+half.y,self.y-half.x)
         xy=CXY(self.x+half.x,self.y-half.y)
     return xy
-  
-
-  def lvector(self,side,size_xy):
-     x=0.
-     if side=='F':
-        x=self.__x
-     else:
-        x=size_xy.x-self.__x   
-     return math.sqrt(x**2+self.__y**2)
-
 
   def __init__(self,x=0.,y=0.):
       self.__x=x
       self.__y=y
- 
+
+
+  def lvector(self,side,xy,size_xy,lny=True):
+    x=0.
+    if side=='F':
+        x=self.__x
+    else:
+        x=size_xy.x-self.__x 
+    y=0
+    if lny:
+        y=self.__y  
+    else:
+        y=size_xy.y-self.__y
+    x=x-xy.x    
+    y=y-xy.y    
+    return math.sqrt(x**2+y**2)
+
 
   def copy(self):
       return CXY(self.__x,self.__y)
-
-
-  def size(self,scale):
-     return f'{round(self.__x*scale)}x{round(self.__y*scale)}'        
 
 
   def norm(self,cxy):
@@ -135,6 +131,23 @@ class tCXY():
         x=round(x*self.__scale)   
         return CXY(x,y)           
 
+    @property
+    def brd(self):
+        return self.__brd
+    
+
+    @property
+    def width(self):
+        return round(self.__scale*self.__brd.x)
+    
+
+    @property
+    def height(self):
+        return round(self.__scale*self.__brd.y)
+    
+    
+    def size(self,sc):
+     return f'{round(sc*self.__scale*self.__brd.x)}x{round(sc*self.__scale*self.__brd.y)}'        
 
   
 def main():
