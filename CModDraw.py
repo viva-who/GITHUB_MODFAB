@@ -3,21 +3,18 @@ from CDesignator import CDesignator
 from tkinter import *
 # Класс отрисовки электронного модуля
 class CModDraw():
-    def __init__(self,ModName,scale,SizeBoard,side,angle=0):
-        self.__side=side
-        self.__angle=angle
+    def __init__(self,ModName,c):
         self.__ModName=ModName
-        self.__scl=scale
-        self.__SB=SizeBoard
+        self.__c=c
         #
         self.__root = Tk()
         self.__root.title(self.__ModName)
-        self.__root.geometry(self.__SB.size(1.2*self.__scl))
+        self.__root.geometry(self.__c.size(1.2))
         #
-        self.__canvas = Canvas(bg="#53C351", width=round(self.__SB.x*self.__scl), height=round(self.__SB.y*self.__scl))
+        self.__canvas = Canvas(bg="#53C351", width=self.__c.X, height=self.__c.Y)
         self.__canvas.pack(anchor=CENTER, expand=1)
         #
-        self.__c=tCXY(self.__scl,self.__SB,self.__side,self.__angle)
+        
 
     # Отрисовка фигуры с переводом координат
     def DrawFig(self,rzm,xy,Angle,el_fill,el_outline,fig='R'):

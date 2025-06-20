@@ -209,7 +209,7 @@ class CElModule():
 
     
     # Отчет по монтажу SMD компонент
-    def RepSMDprm(self,nIsp,side):
+    def RepSMDprm(self,nIsp,side,ang=0):
         SCALE=20
         sp=self.GetIsp(nIsp)
         #----------------------
@@ -219,8 +219,9 @@ class CElModule():
         retSMT=sp.rep_SMD_nozzle()
         print(retSMT[0])   
         #----------------------
+        c=tCXY(SCALE,self.__SizeBrd,side,ang)
         # Объект графического отображения       
-        CMDraw=CModDraw(self.__ModName,SCALE,self.__SizeBrd,side,0)
+        CMDraw=CModDraw(self.__ModName,c)
         #----------------------
         # Вывод элементов по дезигнаторам
         for key in retSMT[1].keys():
@@ -241,7 +242,7 @@ class CElModule():
             for dz_rep in  lst_rep:
                 print(dz_rep)
                 CMDraw.RepDraw(dz_rep,1.)
-            lst_rep.sort(key=lambda d : d.XY.lvector(side,self.__SizeBrd))
+            lst_rep.sort(key=lambda d : d.XY.lvector(c))
             print('')
             for dd in lst_rep:
                 print (dd)

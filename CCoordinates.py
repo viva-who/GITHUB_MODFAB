@@ -25,13 +25,9 @@ class CXY():
     return xy
   
 
-  def lvector(self,side,size_xy):
-     x=0.
-     if side=='F':
-        x=self.__x
-     else:
-        x=size_xy.x-self.__x   
-     return math.sqrt(x**2+self.__y**2)
+  def lvector(self,c):
+     xy=c.tr(self)
+     return math.sqrt(xy.x**2+xy.y**2)
 
 
   def __init__(self,x=0.,y=0.):
@@ -40,11 +36,7 @@ class CXY():
  
 
   def copy(self):
-      return CXY(self.__x,self.__y)
-
-
-  def size(self,scale):
-     return f'{round(self.__x*scale)}x{round(self.__y*scale)}'        
+      return CXY(self.__x,self.__y)        
 
 
   def norm(self,cxy):
@@ -133,9 +125,18 @@ class tCXY():
         else:
            x=self.__brd.x-xy.x
         x=round(x*self.__scale)   
-        return CXY(x,y)           
+        return CXY(x,y) 
 
+    @property
+    def X(self):
+        return round(self.__brd.x*self.__scale) 
+             
+    @property
+    def Y(self):
+        return round(self.__brd.y*self.__scale)          
 
+    def size(self,scl):
+        return f'{round(scl*self.X)}x{round(scl*self.Y)}'
   
 def main():
   a=CXY(20.,100.)
